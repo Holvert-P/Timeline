@@ -1,0 +1,112 @@
+<html>
+
+<head>
+    <title>Timeline</title>
+    <!--VUETIFY-->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+    <!--VUETIFY-->
+    <!-- note: moment.js must be loaded before vis.js, else vis.js uses its embedded version of moment.js -->
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/full-style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/vuex@3.6.2/dist/vuex.js"></script>
+    <script src="/components/timeline.js"></script>
+    <script src="/components/reservas.js"></script>
+    <script src="/components/tabla.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <v-app>
+            <v-container>
+                <br>
+                <reservas></reservas>
+                <br>
+                <timeline></timeline>
+                <br><br>
+                <tabla></tabla>
+            </v-container>
+        </v-app>
+    </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <script>
+        //STORE
+
+        const store = new Vuex.Store({
+            state: {
+                nombres: [{
+                    id: 1,
+                    nombre: 'Horacio',
+                    horario: '2019-03-1 09:00',
+                    horario2: '2019-03-1 10:00',
+
+                }, {
+                    id: 2,
+                    nombre: 'Hugo',
+                    horario: '2019-03-1 8:00',
+                    horario2: '2019-03-1 11:00',
+
+                }, {
+                    id: 2,
+                    nombre: 'Carlos',
+                    horario: '2019-03-1 8:00',
+                    horario2: '2019-03-1 11:00',
+
+                }],
+                nuevoNombre: '',
+                hora: '',
+                hora2: '',
+                fecha: ''
+
+            },
+            //MUTATIONS
+            mutations: {
+                agregarNombre(state) {
+                    state.nombres.push({
+                        nombre: state.nuevoNombre,
+                        horario: state.fecha + " " + state.hora,
+                        horario2: state.fecha + " " + state.hora2,
+
+                    })
+                    console.log(state.nombres)
+                    state.nuevoNombre = ''
+                    state.hora = ''
+                    state.hora2 = ''
+                    state.fecha = ''
+                    localStorage.setItem('chall-vue', JSON.stringify(state.nombres))
+                },
+                eliminarReserva(state, index) {
+                    state.nombres.splice(index, 1)
+                    localStorage.setItem('chall-vue', JSON.stringify(state.nombres))
+                }
+            },
+            created: function(state) {
+                let dataDB = JSON.parse(localStorage.getItem('chall-vue'))
+                if (dataDB == null) {
+                    state.nombres = [];
+                } else state.nombres = dataDB
+            }
+
+        });
+
+        //VUEJS
+        new Vue({
+            el: '#app',
+            vuetify: new Vuetify(),
+            store: store,
+        });
+    </script>
+
+    <script src="js/moment.js"></script>
+    <script src="js/vis.js"></script>
+    <script src="js/script.js"></script>
+
+</body>
+
+</html>
